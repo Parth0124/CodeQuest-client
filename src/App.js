@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { fetchallusers } from "./action/users";
+import { useEffect, useState } from "react";
+import "./App.css";
+import Navbar from "./components/navbar/Navbar";
+import { BrowserRouter as Router } from "react-router-dom";
+import AllRoutes from "./AllRoutes";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const [slidein, setslidein] = useState(true);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchallusers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setslidein(false);
+    }
+  }, []);
+
+  const handleslidein = () => {
+    if (window.innerWidth <= 768) {
+      setslidein((state) => !state);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Navbar handleslidein={handleslidein} />
+        <AllRoutes slidein={slidein} />
+      </Router>
     </div>
   );
 }
